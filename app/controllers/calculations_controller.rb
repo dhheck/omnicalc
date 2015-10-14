@@ -65,7 +65,7 @@ class CalculationsController < ApplicationController
     @hours   = ((@starting - @ending).abs) / 60 / 60
     @days    = ((@starting - @ending).abs) / 60 / 60 / 24
     @weeks   = ((@starting - @ending).abs) / 60 / 60 / 24 / 7
-    @years   = ((@starting - @ending).abs) / 60 / 60 / 24 / 7 / (365 / 7)
+    @years   = ((@starting - @ending).abs) / 60 / 60 / 24 / 7 / (365.25 / 7)
 
     # ================================================================================
     # Your code goes above.
@@ -82,27 +82,57 @@ class CalculationsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer."
+    @sorted_numbers = @numbers.sort
 
-    @count = "Replace this string with your answer."
+    @count = @numbers.count
 
-    @minimum = "Replace this string with your answer."
+    @minimum = @numbers.min
 
-    @maximum = "Replace this string with your answer."
+    @maximum = @numbers.max
 
-    @range = "Replace this string with your answer."
+    @range = @maximum - @minimum
 
-    @median = "Replace this string with your answer."
+    if @count.odd? == true
+        @median = @sorted_numbers[(@count) / 2]
+    else
+        @median = (@sorted_numbers[(@count + 1) / 2] + @sorted_numbers[(@count - 1) / 2]) / 2
+    end
 
-    @sum = "Replace this string with your answer."
+    @sum = @numbers.sum
 
-    @mean = "Replace this string with your answer."
+    @mean = @sum / @count
 
-    @variance = "Replace this string with your answer."
+    def variance(numlist)
+        variance = 0
+        numlist.each do |number|
+            variance = variance + ((number - @mean) ** 2) / @count
+        end
+        return variance
+    end
 
-    @standard_deviation = "Replace this string with your answer."
+    @variance = variance(@numbers)
 
-    @mode = "Replace this string with your answer."
+    @standard_deviation = @variance ** 0.5
+
+    def mode(numberlist)
+        countnum = Hash.new {0}
+        numberlist.each do |num|
+            countnum[num] += 1
+    end
+
+    mode_array = []
+
+    countnum.each do |k, v|
+        if v == countnum.values.max
+            mode_array << k
+        end
+    end
+
+    mode_array.sort
+
+    end
+
+    @mode = mode(@numbers).min
 
     # ================================================================================
     # Your code goes above.
